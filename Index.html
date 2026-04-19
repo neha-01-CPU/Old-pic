@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Picazo - The Ultimate Drawing Game</title>
+    <title>Picazo - Frontend Preview</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="/socket.io/socket.io.js"></script>
-
     <div id="toast-container"></div>
 
     <div id="main-menu" class="screen visible">
@@ -21,20 +19,22 @@
                 <p class="tagline">The Ultimate Drawing Game</p>
             </div>
             <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="15">
+            
             <div class="avatar-picker">
                 <h3>Choose your avatar</h3>
                 <div class="avatar-selector">
-                    <button class="avatar-arrow" id="prev-avatar" aria-label="Previous Avatar">‹</button>
+                    <button class="avatar-arrow" id="prev-avatar">‹</button>
                     <div id="avatar-display" class="avatar-display"></div>
-                    <button class="avatar-arrow" id="next-avatar" aria-label="Next Avatar">›</button>
+                    <button class="avatar-arrow" id="next-avatar">›</button>
                 </div>
             </div>
+
             <div class="button-group">
-                <button class="btn primary" id="play-now-btn">PLAY NOW</button>
-                <button class="btn" id="create-private-btn">CREATE PRIVATE ROOM</button>
-                <button class="btn" id="join-private-btn">JOIN PRIVATE ROOM</button>
+                <button class="btn primary" id="play-now-btn">QUICK PLAY (LOCAL)</button>
+                <button class="btn" id="create-private-btn">ROOM SETTINGS</button>
             </div>
         </div>
+
         <div class="theme-switcher-container">
             <div class="theme-switcher">
                 <span>☀️</span>
@@ -45,15 +45,14 @@
                 <span>🌙</span>
             </div>
         </div>
-        <footer>Made with ❤️</footer>
+        <footer>Made with ❤️ | Frontend Only Mode</footer>
     </div>
 
     <div id="private-room-settings" class="screen">
         <div class="settings-card glass">
-            <h2 style="margin-bottom:20px;">🎮 Create Private Room</h2>
-            <h3>Game Rules</h3>
+            <h2>🎮 Room Settings</h2>
             <div class="form-row">
-                <label for="pr-rounds">Number of Rounds</label>
+                <label for="pr-rounds">Rounds</label>
                 <div class="form-control"><input type="range" id="pr-rounds" min="1" max="10" value="3"></div>
                 <div class="value-badge" data-for="pr-rounds">3</div>
             </div>
@@ -62,40 +61,29 @@
                 <div class="form-control"><input type="range" id="pr-drawtime" min="30" max="180" step="10" value="90"></div>
                 <div class="value-badge" data-for="pr-drawtime">90s</div>
             </div>
-            <h3>Word Options</h3>
-            <div class="form-row">
-                <label for="pr-word-pack">Word Pack</label>
-                <div class="form-control glassy-select-wrapper">
-                    <select id="pr-word-pack" class="glassy-select"></select>
-                </div>
-            </div>
-            <div style="margin-top: 15px;">
-                <label class="label-text">Custom Words</label>
-                <textarea id="pr-custom-words" class="glassy-textarea" placeholder="apple, car, sun..."></textarea>
-                <div class="small-muted">Comma separated. Leave blank for default list.</div>
-            </div>
             <div class="modal-footer-btns">
-                <button class="btn primary" id="pr-confirm-btn">Create Room</button>
-                <button class="btn" id="pr-back-btn">Back</button>
+                <button class="btn primary" id="pr-confirm-btn">ENTER LOBBY</button>
+                <button class="btn" id="pr-back-btn">BACK</button>
             </div>
         </div>
     </div>
 
     <div id="lobby-screen" class="screen">
         <div class="lobby-box glass">
-            <div id="lobby-players" class="lobby-section">
-                <h2 style="margin-bottom:12px;">Players</h2>
-                <div id="room-code-display"></div>
-                <div class="players-list" id="lobby-players-list"></div>
-            </div>
-            <div id="lobby-settings" class="lobby-section">
-                <h2 style="margin-bottom:12px;">Settings</h2>
-                <div id="lobby-settings-list"></div>
-                <div id="lobby-buttons">
-                    <button class="btn primary" id="start-game-btn">START GAME</button>
-                    <div id="waiting-for-host-msg">Waiting for host...</div>
-                    <button class="btn" id="leave-lobby-btn">Leave Lobby</button>
+            <div class="lobby-section">
+                <h2>Players</h2>
+                <div class="players-list" id="lobby-players-list">
+                    <div class="player-row">
+                        <div class="player-avatar" id="lobby-me-avatar"></div>
+                        <span>You (Host) 👑</span>
+                    </div>
                 </div>
+            </div>
+            <div class="lobby-section">
+                <h2>Game Info</h2>
+                <p>Mode: <strong>Local Sandbox</strong></p>
+                <button class="btn primary" id="start-game-btn">START DRAWING</button>
+                <button class="btn" id="leave-lobby-btn">EXIT</button>
             </div>
         </div>
     </div>
@@ -103,28 +91,23 @@
     <div id="game-screen" class="screen">
         <div class="game-wrapper">
             <header class="header-bar glass">
-                <div id="clock">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <span id="timer-display">90</span>
-                </div>
+                <div id="clock">⏳ <span id="timer-display">90</span></div>
                 <div id="word-display">
-                    <div id="round-info">Round 1 of 3</div>
-                    <div id="word-dashes"></div>
-                    <div id="word-info">8 Letters</div>
+                    <div id="word-dashes">S A N D B O X</div>
+                    <div id="word-info">Drawing Mode</div>
                 </div>
-                <div id="artist-info">Artist: <strong id="current-artist-name">...</strong></div>
+                <div id="artist-info">Artist: <strong id="current-artist-name">You</strong></div>
             </header>
             
             <aside class="tools-bar glass">
-                <button class="tool-btn active" data-tool="pencil" title="Pencil">✏️</button>
-                <button class="tool-btn" data-tool="eraser" title="Eraser">🧼</button>
+                <button class="tool-btn active" data-tool="pencil">✏️</button>
+                <button class="tool-btn" data-tool="eraser">🧼</button>
                 <div class="tool-container">
                     <button class="tool-btn" id="brush-size-btn">⭕</button>
                     <div class="tool-popup" id="brush-size-popup">
-                        <div class="size-option" data-size="2" style="width: 10px; height: 10px;"></div>
-                        <div class="size-option" data-size="5" style="width: 15px; height: 15px;"></div>
-                        <div class="size-option" data-size="10" style="width: 20px; height: 20px;"></div>
-                        <div class="size-option" data-size="20" style="width: 25px; height: 25px;"></div>
+                        <div class="size-option" data-size="2" style="width:10px;height:10px;"></div>
+                        <div class="size-option" data-size="10" style="width:18px;height:18px;"></div>
+                        <div class="size-option" data-size="30" style="width:25px;height:25px;"></div>
                     </div>
                 </div>
                 <div class="tool-container">
@@ -137,64 +120,25 @@
 
             <main class="canvas-wrapper">
                 <canvas id="drawingCanvas"></canvas>
-                <div id="word-reveal-overlay"></div>
             </main>
 
             <footer class="footer-area">
                 <div class="players-container glass">
-                    <h3 class="container-header">Players</h3>
-                    <div class="players-list" id="players-list"></div>
+                    <div class="player-row is-artist">
+                        <div class="player-avatar" id="game-me-avatar"></div>
+                        <span>You</span>
+                    </div>
                 </div>
                 <div class="chat-container glass">
-                    <h3 class="container-header">Chat</h3>
-                    <div id="chat-messages"></div>
+                    <div id="chat-messages">
+                        <div class="message system">Welcome to the layout preview!</div>
+                    </div>
                     <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Type guess here...">
-                        <button id="send-guess-btn">➤</button>
+                        <input type="text" id="chat-input" placeholder="Chat is disabled in preview...">
+                        <button class="btn" style="width:auto; margin:0; padding:10px;">➤</button>
                     </div>
                 </div>
             </footer>
-        </div>
-        <div id="guess-popup-container"></div>
-    </div>
-
-    <div id="end-game-screen" class="screen">
-        <div class="podium-box glass animate-in">
-            <h1 id="game-over-reason">Game Over!</h1>
-            <div class="podium-container" id="podium-container"></div>
-        </div>
-        <div class="confetti-container" id="end-game-confetti"></div>
-        <div id="play-again-popup">
-            <button class="btn" id="play-again-btn">PLAY AGAIN</button>
-        </div>
-    </div>
-
-    <div id="word-choice-modal" class="modal">
-        <div class="settings-card glass">
-            <h2>Choose a word!</h2>
-            <p id="word-choice-timer">Time to choose: 10</p>
-            <div id="word-choice-container"></div>
-        </div>
-    </div>
-
-    <div id="round-summary-modal" class="modal">
-        <div class="round-summary-box glass">
-            <h2>Round Over!</h2>
-            <p class="summary-word-reveal">The word was: <strong id="revealed-word">WORD</strong></p>
-            <div id="summary-player-list"></div>
-            <div class="confetti-container" id="round-summary-confetti"></div>
-        </div>
-    </div>
-
-    <div id="join-room-modal" class="modal">
-        <div class="settings-card glass">
-            <h2>Join Private Room</h2>
-            <p>Enter the 4-letter room code.</p>
-            <input type="text" id="room-code-input" placeholder="ABCD" maxlength="4">
-            <div class="modal-footer-btns">
-                <button class="btn primary" id="confirm-join-btn">Join</button>
-                <button class="btn" id="cancel-join-btn">Cancel</button>
-            </div>
         </div>
     </div>
 
