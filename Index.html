@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Picazo - Frontend Preview</title>
+    <title>Picazo - Frontend Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -13,15 +13,16 @@
     <div id="toast-container"></div>
 
     <div id="main-menu" class="screen visible">
-        <div class="menu-box glass animate-in">
+        <div class="menu-box glass">
             <div class="logo-container">
                 <h1>🎨 Picazo</h1>
-                <p class="tagline">The Ultimate Drawing Game</p>
+                <p class="tagline">The Ultimate Drawing Experience</p>
             </div>
+            
             <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="15">
             
             <div class="avatar-picker">
-                <h3>Choose your avatar</h3>
+                <h3>Select Avatar</h3>
                 <div class="avatar-selector">
                     <button class="avatar-arrow" id="prev-avatar">‹</button>
                     <div id="avatar-display" class="avatar-display"></div>
@@ -30,8 +31,8 @@
             </div>
 
             <div class="button-group">
-                <button class="btn primary" id="play-now-btn">QUICK PLAY (LOCAL)</button>
-                <button class="btn" id="create-private-btn">ROOM SETTINGS</button>
+                <button class="btn primary" id="play-now-btn">START SANDBOX</button>
+                <button class="btn" id="create-private-btn">DESIGN SETTINGS</button>
             </div>
         </div>
 
@@ -45,24 +46,24 @@
                 <span>🌙</span>
             </div>
         </div>
-        <footer>Made with ❤️ | Frontend Only Mode</footer>
+        <footer>Frontend Preview Mode</footer>
     </div>
 
     <div id="private-room-settings" class="screen">
         <div class="settings-card glass">
-            <h2>🎮 Room Settings</h2>
+            <h2>🎮 Room Config</h2>
             <div class="form-row">
                 <label for="pr-rounds">Rounds</label>
-                <div class="form-control"><input type="range" id="pr-rounds" min="1" max="10" value="3"></div>
-                <div class="value-badge" data-for="pr-rounds">3</div>
+                <div class="form-control"><input type="range" id="pr-rounds" min="1" max="10" value="5"></div>
+                <div class="value-badge" data-for="pr-rounds">5</div>
             </div>
             <div class="form-row">
-                <label for="pr-drawtime">Draw Time</label>
+                <label for="pr-drawtime">Time Limit</label>
                 <div class="form-control"><input type="range" id="pr-drawtime" min="30" max="180" step="10" value="90"></div>
                 <div class="value-badge" data-for="pr-drawtime">90s</div>
             </div>
-            <div class="modal-footer-btns">
-                <button class="btn primary" id="pr-confirm-btn">ENTER LOBBY</button>
+            <div class="button-row">
+                <button class="btn primary" id="pr-confirm-btn">SAVE & ENTER</button>
                 <button class="btn" id="pr-back-btn">BACK</button>
             </div>
         </div>
@@ -75,15 +76,15 @@
                 <div class="players-list" id="lobby-players-list">
                     <div class="player-row">
                         <div class="player-avatar" id="lobby-me-avatar"></div>
-                        <span>You (Host) 👑</span>
+                        <span>You (Artist) 👑</span>
                     </div>
                 </div>
             </div>
             <div class="lobby-section">
-                <h2>Game Info</h2>
-                <p>Mode: <strong>Local Sandbox</strong></p>
-                <button class="btn primary" id="start-game-btn">START DRAWING</button>
-                <button class="btn" id="leave-lobby-btn">EXIT</button>
+                <h2>Game Status</h2>
+                <p>Status: <strong>Ready to Draw</strong></p>
+                <button class="btn primary" id="start-game-btn">GO TO CANVAS</button>
+                <button class="btn" id="leave-lobby-btn">QUIT</button>
             </div>
         </div>
     </div>
@@ -93,29 +94,32 @@
             <header class="header-bar glass">
                 <div id="clock">⏳ <span id="timer-display">90</span></div>
                 <div id="word-display">
-                    <div id="word-dashes">S A N D B O X</div>
-                    <div id="word-info">Drawing Mode</div>
+                    <div id="word-dashes">P I C A Z O</div>
+                    <div id="word-info">Free Draw Mode</div>
                 </div>
-                <div id="artist-info">Artist: <strong id="current-artist-name">You</strong></div>
+                <div id="artist-info">Artist: <strong>You</strong></div>
             </header>
             
             <aside class="tools-bar glass">
-                <button class="tool-btn active" data-tool="pencil">✏️</button>
-                <button class="tool-btn" data-tool="eraser">🧼</button>
+                <button class="tool-btn active" data-tool="pencil" title="Pencil">✏️</button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser">🧼</button>
+                
                 <div class="tool-container">
-                    <button class="tool-btn" id="brush-size-btn">⭕</button>
+                    <button class="tool-btn" id="brush-size-btn" title="Size">⭕</button>
                     <div class="tool-popup" id="brush-size-popup">
                         <div class="size-option" data-size="2" style="width:10px;height:10px;"></div>
                         <div class="size-option" data-size="10" style="width:18px;height:18px;"></div>
-                        <div class="size-option" data-size="30" style="width:25px;height:25px;"></div>
+                        <div class="size-option" data-size="40" style="width:25px;height:25px;"></div>
                     </div>
                 </div>
+
                 <div class="tool-container">
-                    <button class="tool-btn" id="color-palette-btn">🎨</button>
+                    <button class="tool-btn" id="color-palette-btn" title="Colors">🎨</button>
                     <div class="tool-popup" id="color-palette-popup"></div>
                 </div>
-                <button class="tool-btn" id="undo-btn">↩️</button>
-                <button class="tool-btn" id="clear-btn">🗑️</button>
+
+                <button class="tool-btn" id="undo-btn" title="Undo">↩️</button>
+                <button class="tool-btn" id="clear-btn" title="Clear">🗑️</button>
             </aside>
 
             <main class="canvas-wrapper">
@@ -124,17 +128,17 @@
 
             <footer class="footer-area">
                 <div class="players-container glass">
-                    <div class="player-row is-artist">
+                    <div class="player-row active-artist">
                         <div class="player-avatar" id="game-me-avatar"></div>
-                        <span>You</span>
+                        <span>Designer (You)</span>
                     </div>
                 </div>
                 <div class="chat-container glass">
                     <div id="chat-messages">
-                        <div class="message system">Welcome to the layout preview!</div>
+                        <div class="message system">Sandbox mode active. Test your tools!</div>
                     </div>
                     <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Chat is disabled in preview...">
+                        <input type="text" id="chat-input" placeholder="Type here..." disabled>
                         <button class="btn" style="width:auto; margin:0; padding:10px;">➤</button>
                     </div>
                 </div>
